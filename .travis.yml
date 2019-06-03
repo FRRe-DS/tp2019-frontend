@@ -1,0 +1,31 @@
+sudo: false
+
+language: node_js
+node_js:
+  - "11"
+# Cache Gcloud SDK between commands
+cache:
+  directories:
+    - "$HOME/.npm"
+# Install services
+services:
+  - docker
+# Set env vars
+env:
+  global:
+    - NODE_ENV=CI
+before_script:
+  - npm run build
+script: 
+- |
+  echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" --password-stdin
+  if [[ "$TRAVIS_PULL_REQUEST" == "false" ]] && [[ "$TRAVIS_BRANCH" == "master" ]]; then
+    echo "On Branch $TRAVIS_BRANCH, building Latest images"
+    docker build -t docker.io/frredacs/medicos-frontend:${TRAVIS_BUILD_NUMBER} .
+    docker tag docker.io/frredacs/medicos-frontend:${TRAVIS_BUILD_NUMBER} docker.io/frredacs/medicos-frontend:latest
+    docker push docker.io/frredacs/medicos-frontend:${TRAVIS_BUILD_NUMBER} 
+    docker push docker.io/frredacs/medicos-frontend:latest
+  else
+    echo "On Branch $TRAVIS_BRANCH, checking build"
+  fi
+
