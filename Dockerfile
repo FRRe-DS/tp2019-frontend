@@ -5,7 +5,7 @@ RUN apk update && apk add --no-cache make git
 WORKDIR /app
 # Install app dependencies
 
-COPY package.json package-lock.json ..browserslistrc babel.config.js tsconfig.json /app/
+COPY package.json package-lock.json .browserslistrc babel.config.js tsconfig.json /app/
 RUN cd /app && npm set progress=false && npm install
 # Copy project files into the docker image
 COPY .  /app
