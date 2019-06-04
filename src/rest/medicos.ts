@@ -21,7 +21,6 @@ export class Medico {
 export interface MedicosRestApi {
   createMedico(item: Medico): AxiosPromise<Medico>;
   updateMedico(updated: Medico): AxiosPromise<Medico>;
-  getMedicos(): AxiosPromise<Medico[]>;
   getMedico(id: number): AxiosPromise<Medico>;
   getAllMedicos(): AxiosPromise<Medico[]>;
 }
@@ -38,9 +37,6 @@ class Implementation implements MedicosRestApi {
   }
   updateMedico(updated: Medico): AxiosPromise<Medico> {
     return Axios.axiosInstance().put<Medico>(`/medico`, updated);
-  }
-  getMedicos(): AxiosPromise<Medico[]> {
-    return Axios.axiosInstance().get<Medico[]>("medico/search/all");
   }
   getMedico(id: number): AxiosPromise<Medico> {
     return Axios.axiosInstance()
